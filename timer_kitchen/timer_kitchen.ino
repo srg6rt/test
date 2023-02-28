@@ -1,3 +1,18 @@
+/*
+
+30 minutes work, 6 minutes rest, 30 minutes work, 6 minutes rest, 30 minutes work, 6 minutes rest ...
+
+Timer start from 29 minutes 59 seconds, when the countdown hits 0 minutes, 15 second
+start buzzer and flash led until  countdown hits 0 minutes, 1 second. 
+After, timer switch to 5 minutes 59 seconds, when the countdown hits 0 minutes, 15 second
+start buzzer and flash led until  countdown hits 0 minutes, 1 second. 
+End starts over.
+
+Buttons can manualy set 30 minutes and 6 minutes timer.
+
+*/
+
+
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
