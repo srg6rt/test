@@ -14,7 +14,7 @@ Buttons can manualy set 30 minutes and 6 minutes timer.
 
 
 #include <Wire.h>
-#include <Adafruit_GFX.h>
+
 #include <Adafruit_SSD1306.h>
 #include <Fonts/FreeSerif9pt7b.h>
 
