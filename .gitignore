@@ -1,0 +1,19 @@
+# Blocklist files/folders in same directory as the .gitignore file
+/*
+
+# But not these files...
+!.gitignore
+!README.md
+
+#Ignore all files ending with .ino
+**.ino
+
+!webcamera_face/
+!webcamera_face/*
+
+!monooxide/
+!monooxide/*
+
+!timer_kitchen/
+!timer_kitchen/rezerv_timer_kitchen.zip
+!timer_kitchen/*
