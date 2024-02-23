@@ -9,9 +9,7 @@ start buzzer and flash led until  countdown hits 0 minutes, 1 second.
 And starts over.
 
 Buttons can manualy set 30 minutes and 6 minutes timer.
-
 */
-
 
 #include <Wire.h>
 
@@ -32,9 +30,9 @@ boolean button1WasUp = true;      // переменные для считыва�
 boolean button2WasUp = true;
  
 
-int TIMER_1 = 5;  // minutes + 1 minute
-int TIMER_2 = 30; // minutes  + 1 minute
-int CUSTOM_TIMER = 2; // minutes  выбор таймера вручную кнопкой ()
+int TIMER_1 = 9;  // minutes + 1 minute
+int TIMER_2 = 44; // minutes  + 1 minute
+int CUSTOM_TIMER = 5; // minutes  выбор таймера вручную кнопкой ()
 
 // переменные для отсчета минут и секунд
 int SEC = 60;       // выводим на экран при старте
@@ -100,24 +98,23 @@ void loop() {
    if (button2WasUp && !button2IsUp) {
       delay(10); 
       button2IsUp = digitalRead(3); 
+
+      // устанавливаем вручную таймер на 5+1 минут
       if (!button2IsUp && CUSTOM_TIMER == 2) { 
         CUSTOM_TIMER = 5;
-        //TIMER_1 = CUSTOM_TIMER;
         MIN = CUSTOM_TIMER; // 5 minutes
-        SEC = 59;
         SWITCH_BETWEEN_MODES = 0;
-        display.println(String(MIN+1)+" minn");
+        display.println(String(CUSTOM_TIMER+1)+" min");
         display.display();
         //delay(200);
       }
-      // устанавливаем вручную таймер на 2 минуты
+
+      // устанавливаем вручную таймер на 2+1 минуты
       else if (!button2IsUp && CUSTOM_TIMER == 5) {
         CUSTOM_TIMER = 2;
-        TIMER_1 = CUSTOM_TIMER;
-        MIN = TIMER_1; // 2 minutes
-        SEC = 59;
+        MIN = CUSTOM_TIMER; // 2 minutes
         SWITCH_BETWEEN_MODES = 0;
-        display.println(String(MIN+1)+" min");
+        display.println(String(CUSTOM_TIMER+1)+" min");
         display.display();
         //delay(200);
       }
@@ -126,24 +123,20 @@ void loop() {
    button2WasUp = button2IsUp; // запоминаем состояние кнопки 2 
 
 
-
   if (millis() - timer > 1000) {
 
     timer = millis();
     SEC = SEC - 1;
 
-    if (SEC < 1) {
+    if (SEC < 1 ) {
       SEC = 59;
       MIN = MIN - 1;
     }
 
+    
     // выводим текущий счетчик времени на монитор порта
-
-
-    display.println(String(MIN) + " : " + String(SEC));
+    display.println(String(MIN) + " : " + String(SEC) + "s");
     display.display();
-
-
 
     // Включение сигнала по истечении 30 минут
     // Если MIN = 0 SEC = интервалу в 10 секунд, подать звуковой сигнал в течении 10 секунд
@@ -157,7 +150,7 @@ void loop() {
       if ( (MIN == 0) and (SEC == 1) ) {
 
         SWITCH_BETWEEN_MODES = 0;
-        MIN = TIMER_1; // Установка таймера на 6 минут
+        MIN = TIMER_1; // Установка таймера на 6 минут при включении таймера
         SEC = 60;
 
       }
@@ -179,11 +172,6 @@ void loop() {
   }
 
 }
-
-
-
-
-
 
 
 
