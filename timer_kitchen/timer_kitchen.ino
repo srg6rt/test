@@ -9,13 +9,19 @@ start buzzer and flash led until  countdown hits 0 minutes, 1 second.
 And starts over.
 
 Buttons can manualy set 30 minutes and 6 minutes timer.
+
+Second press on one of the button set manualy 3 minutes, not use in loop.
+After 3 minutes countdown, timer return to loop schema 30-6-30-6...
+
 */
+
 
 #include <Wire.h>
 
 #include <Adafruit_SSD1306.h>
-#include <Fonts/FreeSerif9pt7b.h>
-
+#include <Fonts/FreeSerif9pt7b.h> // Для вывода "30 min" 
+#include <Fonts/FreeSerifBold12pt7b.h>
+ 
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -30,9 +36,10 @@ boolean button1WasUp = true;      // переменные для считыва�
 boolean button2WasUp = true;
  
 
-int TIMER_1 = 9;  // minutes + 1 minute
-int TIMER_2 = 44; // minutes  + 1 minute
-int CUSTOM_TIMER = 5; // minutes  выбор таймера вручную кнопкой ()
+int TIMER_1 = 5;  // minutes + 1 minute
+int TIMER_2 = 29; // minutes  + 1 minute
+
+int CUSTOM_TIMER = 5; // minutes  для ручного выбора таймера
 
 // переменные для отсчета минут и секунд
 int SEC = 60;       // выводим на экран при старте
@@ -73,7 +80,7 @@ void loop() {
    boolean button1IsUp = digitalRead(2);   // узнаем текущее состояние кнопок
    boolean button2IsUp = digitalRead(3);
 
-  display.setFont(&FreeSerif9pt7b);
+  display.setFont(&FreeSerifBold12pt7b);
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -84,12 +91,14 @@ void loop() {
       delay(10);
       button1IsUp = digitalRead(2);
       if (!button1IsUp) {
-        MIN = TIMER_2; // 29 minutes
-        SEC = 59;
+        MIN = TIMER_2; // Устанавливаем 29 минут
+        SEC = 59; // Устанавливаем 59 секунд
         SWITCH_BETWEEN_MODES = 1;
+        display.setFont(&FreeSerif9pt7b);
+        display.clearDisplay();
         display.println(String(MIN+1)+" min");
         display.display();
-        delay(200);
+        delay(100);
       }
    } 
    button1WasUp = button1IsUp; // запоминаем состояние кнопки 1 
@@ -102,21 +111,23 @@ void loop() {
       // устанавливаем вручную таймер на 5+1 минут
       if (!button2IsUp && CUSTOM_TIMER == 2) { 
         CUSTOM_TIMER = 5;
-        MIN = CUSTOM_TIMER; // 5 minutes
+        MIN = CUSTOM_TIMER;     // Устанавливаем 5+1 минут
+        SEC = 60;               // Устанавливаем 60-1 секунд
         SWITCH_BETWEEN_MODES = 0;
         display.println(String(CUSTOM_TIMER+1)+" min");
         display.display();
-        //delay(200);
+        delay(100);
       }
 
       // устанавливаем вручную таймер на 2+1 минуты
       else if (!button2IsUp && CUSTOM_TIMER == 5) {
         CUSTOM_TIMER = 2;
-        MIN = CUSTOM_TIMER; // 2 minutes
+        MIN = CUSTOM_TIMER; // Устанавливаем 2+1 минут
+        SEC = 60;           // Устанавливаем 60-1 секунд
         SWITCH_BETWEEN_MODES = 0;
         display.println(String(CUSTOM_TIMER+1)+" min");
         display.display();
-        //delay(200);
+        delay(100);
       }
     
    } 
@@ -135,7 +146,7 @@ void loop() {
 
     
     // выводим текущий счетчик времени на монитор порта
-    display.println(String(MIN) + " : " + String(SEC) + "s");
+    display.println(String(MIN)+ ":" + String(SEC));
     display.display();
 
     // Включение сигнала по истечении 30 минут
@@ -170,9 +181,7 @@ void loop() {
       }
     }
   }
-
 }
-
 
 
 void mcu_scoreTone()
