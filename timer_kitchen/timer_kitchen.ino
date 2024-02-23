@@ -32,15 +32,17 @@ boolean button1WasUp = true;      // переменные для считыва�
 boolean button2WasUp = true;
  
 
+int TIMER_1 = 5;  // minutes + 1 minute
+int TIMER_2 = 30; // minutes  + 1 minute
+int CUSTOM_TIMER = 2; // minutes  выбор таймера вручную кнопкой ()
 
-int SEC = 60;   // переменные для отсчета минут и секунд
-int MIN = 29;  // set to 29 
+// переменные для отсчета минут и секунд
+int SEC = 60;       // выводим на экран при старте
+int MIN = TIMER_2;  // выводим на экран при старте
 unsigned long timer;
 const int buzzer = 11; //buzzer to arduino pin 11
 int SWITCH_BETWEEN_MODES = 1;
 int BUZZER_SOUND_INTERVAL = 15; // secunds
-int TIMER_1 = 5; // minutes + 1 minute
-int TIMER_2 = 29; // minutes  + 1 minute
 
 
 void setup() {
@@ -89,7 +91,7 @@ void loop() {
         SWITCH_BETWEEN_MODES = 1;
         display.println(String(MIN+1)+" min");
         display.display();
-        delay(2000);
+        delay(200);
       }
    } 
    button1WasUp = button1IsUp; // запоминаем состояние кнопки 1 
@@ -98,13 +100,26 @@ void loop() {
    if (button2WasUp && !button2IsUp) {
       delay(10); 
       button2IsUp = digitalRead(3); 
-      if (!button2IsUp) { 
-        MIN = TIMER_1; // 5 minutes
+      if (!button2IsUp && CUSTOM_TIMER == 2) { 
+        CUSTOM_TIMER = 5;
+        //TIMER_1 = CUSTOM_TIMER;
+        MIN = CUSTOM_TIMER; // 5 minutes
+        SEC = 59;
+        SWITCH_BETWEEN_MODES = 0;
+        display.println(String(MIN+1)+" minn");
+        display.display();
+        //delay(200);
+      }
+      // устанавливаем вручную таймер на 2 минуты
+      else if (!button2IsUp && CUSTOM_TIMER == 5) {
+        CUSTOM_TIMER = 2;
+        TIMER_1 = CUSTOM_TIMER;
+        MIN = TIMER_1; // 2 minutes
         SEC = 59;
         SWITCH_BETWEEN_MODES = 0;
         display.println(String(MIN+1)+" min");
         display.display();
-        delay(2000);
+        //delay(200);
       }
     
    } 
@@ -130,7 +145,7 @@ void loop() {
 
 
 
-    // Включение сигнала на по истечении 30 минут
+    // Включение сигнала по истечении 30 минут
     // Если MIN = 0 SEC = интервалу в 10 секунд, подать звуковой сигнал в течении 10 секунд
     // Если SEC есть в интервале constrain  50 <--> 59
 
